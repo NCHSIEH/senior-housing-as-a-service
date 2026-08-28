@@ -1,4 +1,4 @@
-# 本站只發布公開簡介版；/full/ 已停止發布（保留 Disallow 為第二道保險）
+# /full/ 不進搜尋引擎（僅降低曝光，非存取控制——擋不住拿到網址的人）
 User-agent: *
 Disallow: /full/
 Allow: /
