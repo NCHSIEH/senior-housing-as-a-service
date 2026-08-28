@@ -1808,7 +1808,7 @@ function renderA(){
     {name:"照護協調服務",color:"#0E6E6B",stack:1,values:yr.map(r=>+((r.A*(+$("pCare").value)*12)/1e6).toFixed(1))},
     {name:"住宅代管平台",color:"#9A6B10",stack:1,values:yr.map(r=>+((r.M*(+$("pAnt").value)*12)/1e6).toFixed(1))}
   ],null);
-  let h="<thead><tr><th scope="col">年</th><th scope="col" class='r'>A戶</th><th scope="col" class='r'>B戶</th><th scope="col" class='r'>管理戶</th><th scope="col" class='r'>營收M</th><th scope="col" class='r'>人事M</th><th scope="col" class='r'>EBIT M</th><th scope="col" class='r'>D&A M</th><th scope="col" class='r'>CAPEX M</th><th scope="col" class='r'>FCF M</th><th scope="col" class='r'>累積M</th></tr></thead><tbody>";
+  let h="<thead><tr><th>年</th><th class='r'>A戶</th><th class='r'>B戶</th><th class='r'>管理戶</th><th class='r'>營收M</th><th class='r'>人事M</th><th class='r'>EBIT M</th><th class='r'>D&A M</th><th class='r'>CAPEX M</th><th class='r'>FCF M</th><th class='r'>累積M</th></tr></thead><tbody>";
   yr.forEach((row,i)=>{h+=`<tr><td>Y${row.y}</td><td class="r num">${row.A}</td><td class="r num">${row.B}</td><td class="r num">${row.M}</td><td class="r num">${fmtM(row.rev)}</td><td class="r num">${fmtM(row.pers)}</td><td class="r num" style="color:${row.ebit<0?'var(--red)':'inherit'}">${fmtM(row.ebit)}</td><td class="r num">${fmtM(row.dep)}</td><td class="r num">${fmtM(row.capex)}</td><td class="r num" style="color:${row.fcf<0?'var(--red)':'var(--green)'}">${fmtM(row.fcf)}</td><td class="r num">${fmtM(cums[i])}</td></tr>`;});
   $("tblTen").innerHTML=h+"</tbody>";
   renderTornado();
@@ -21425,7 +21425,7 @@ ff.innerHTML=`<button class="badge b-navy" data-f="all" style="border:none;curso
 ff.querySelectorAll("button").forEach(b=>{b.onclick=()=>{famSel=b.dataset.f;ff.querySelectorAll("button").forEach(x=>{x.className="badge";x.style.background="#fff";x.style.color="var(--sub)";x.style.border="1px solid var(--line)";x.style.cursor="pointer";});b.className="badge b-navy";b.style.border="none";renderEco();};});
 function renderOpp(){
   const rows=ECO.biz.map(b=>({b,c:bizCalc(b)})).sort((a,x)=>x.c.score-a.c.score);
-  let h="<thead><tr><th scope="col">順位</th><th scope="col">ID</th><th scope="col">商機</th><th scope="col">族群</th><th scope="col" class='r'>CAP</th><th scope="col" class='r'>價值</th><th scope="col" class='r'>準備</th><th scope="col" class='r'>缺口</th><th scope="col">定位</th><th scope="col" class='r'>優先分</th></tr></thead><tbody>";
+  let h="<thead><tr><th>順位</th><th>ID</th><th>商機</th><th>族群</th><th class='r'>CAP</th><th class='r'>價值</th><th class='r'>準備</th><th class='r'>缺口</th><th>定位</th><th class='r'>優先分</th></tr></thead><tbody>";
   let rank=0;
   rows.forEach(({b,c})=>{rank++;
     if(famSel!=="all"&&b.family!==famSel)return;
@@ -21450,9 +21450,9 @@ window.ecoShow=function(id){
   d.scrollIntoView({behavior:"smooth",block:"nearest"});
 };
 function renderHeat(){
-  let h='<table class="tbl" style="font-size:.72rem"><thead><tr><th scope="col" style="position:sticky;left:0;z-index:2">能力＼商機</th>';
-  ECO.biz.forEach(b=>{h+=`<th scope="col" title="${b.name}" style="writing-mode:vertical-rl;max-height:110px;padding:4px 2px">${b.id.replace("OPP-","")}·${b.name.slice(0,6)}</th>`;});
-  h+="<th scope="col" class='r'>共用數</th></tr></thead><tbody>";
+  let h='<table class="tbl" style="font-size:.72rem"><thead><tr><th style="position:sticky;left:0;z-index:2">能力＼商機</th>';
+  ECO.biz.forEach(b=>{h+=`<th title="${b.name}" style="writing-mode:vertical-rl;max-height:110px;padding:4px 2px">${b.id.replace("OPP-","")}·${b.name.slice(0,6)}</th>`;});
+  h+="<th class='r'>共用數</th></tr></thead><tbody>";
   ECO.caps.forEach(cp=>{
     const used=ECO.biz.filter(b=>b.caps.includes(cp.id)).length;
     h+=`<tr><td style="position:sticky;left:0;background:#fff;white-space:nowrap"><b>${cp.id.replace("CAP-","C")}</b> ${cp.name.slice(0,10)} <span style="color:${PZCOLOR[cp.puzzle.slice(0,1)]}">${cp.puzzle.slice(0,1)}</span></td>`;
@@ -21500,7 +21500,7 @@ function renderSimResult(){
     <div class="stat warm2"><div class="lb">高共用缺口＝優先補</div><div class="v num">${gaps.filter(c=>need.get(c.id)>=2).length}</div></div>
   </div>
   ${gaps.length?`<h3>待補的拼圖（依共用度優先）</h3><div class="jline">${gapH}</div>`:'<p style="color:var(--green);font-weight:700">✅ 此組合能力全數就緒，可直接推進。</p>'}
-  <h3>組合內各生意</h3><div class="scrollx"><table class="tbl"><thead><tr><th scope="col">ID</th><th scope="col">商機</th><th scope="col" class="r">缺口</th><th scope="col" class="r">優先分</th></tr></thead><tbody>${scores}</tbody></table></div>`;
+  <h3>組合內各生意</h3><div class="scrollx"><table class="tbl"><thead><tr><th>ID</th><th>商機</th><th class="r">缺口</th><th class="r">優先分</th></tr></thead><tbody>${scores}</tbody></table></div>`;
 }
 function renderCap(){
   let h="";
@@ -21568,7 +21568,7 @@ function renderCases(){
   });
 }
 renderCases();
-let th="<thead><tr><th scope="col">ID</th><th scope="col">機制/學理</th><th scope="col">內容</th><th scope="col">應用於本事業</th></tr></thead><tbody>";
+let th="<thead><tr><th>ID</th><th>機制/學理</th><th>內容</th><th>應用於本事業</th></tr></thead><tbody>";
 ECO.theories.forEach(t=>{th+=`<tr><td>${t.id}</td><td><b>${t.name}</b></td><td>${t.what}</td><td>${t.use}</td></tr>`;});
 document.getElementById("thTbl").innerHTML=th+"</tbody>";
 /* 16 journeys */
@@ -21587,13 +21587,13 @@ renderJny("JNY-01");
 /* 17 system */
 let ph="";ECO.system.phases.forEach(p=>{ph+=`<div class="tnode"><h4>${p.id}｜${p.name}</h4><p>${p.mods.join("、")}</p><p style="color:var(--copper)">${p.note}</p></div>`;});
 document.getElementById("sysPhases").innerHTML=ph;
-let dt="<thead><tr><th scope="col">分級</th><th scope="col">例子</th><th scope="col">可見規則</th></tr></thead><tbody>";
+let dt="<thead><tr><th>分級</th><th>例子</th><th>可見規則</th></tr></thead><tbody>";
 ECO.system.dataclass.forEach(d=>{dt+=`<tr><td><b>${d.lv}</b></td><td>${d.ex}</td><td>${d.rule}</td></tr>`;});
 document.getElementById("sysData").innerHTML=dt+"</tbody>";
 document.getElementById("sysRoles").innerHTML=ECO.system.roles.map(r=>`<span class="badge b-navy">${r}</span>`).join(" ");
 document.getElementById("sysPrin").innerHTML=ECO.system.principles.map(p=>`<li>✔ ${p}</li>`).join("");
 /* 18 toolchain */
-let tc="<thead><tr><th scope="col">階段</th><th scope="col">適用對象</th><th scope="col">交付物</th><th scope="col">形式</th><th scope="col">狀態</th></tr></thead><tbody>";
+let tc="<thead><tr><th>階段</th><th>適用對象</th><th>交付物</th><th>形式</th><th>狀態</th></tr></thead><tbody>";
 ECO.toolchain.forEach(t=>{t.items.forEach((it,i)=>{tc+=`<tr>${i===0?`<td rowspan="${t.items.length}" style="font-weight:700;background:var(--navy-soft)">${t.stage}</td><td rowspan="${t.items.length}">${t.who}</td>`:""}<td>${it[0]}</td><td>${it[1]}</td><td>${it[2].startsWith("已")?`<span class="badge b-green">${it[2]}</span>`:`<span class="badge b-asm">${it[2]}</span>`}</td></tr>`;});});
 document.getElementById("tcTbl").innerHTML=tc+"</tbody>";
 })();
@@ -21650,11 +21650,11 @@ ECO.models.forEach(m=>{
   <div style="font-size:.78rem;color:var(--sub)">所在：${m.where}｜狀態：<b>${m.status}</b></div>`;
   mb.appendChild(d);
 });
-let th2="<thead><tr><th scope="col">ID</th><th scope="col">學理</th><th scope="col">內容</th><th scope="col">如何應用於本案</th></tr></thead><tbody>";
+let th2="<thead><tr><th>ID</th><th>學理</th><th>內容</th><th>如何應用於本案</th></tr></thead><tbody>";
 ECO.theories.forEach(t=>{th2+=`<tr><td>${t.id}</td><td><b>${t.name}</b></td><td>${t.what}</td><td>${t.use}</td></tr>`;});
 document.getElementById("thTbl2").innerHTML=th2+"</tbody>";
 document.getElementById("kmPurpose").innerHTML="<b>目的：</b>"+ECO.km.purpose+"<br><b>角色：</b>"+ECO.km.roles;
-let km="<thead><tr><th scope="col">分類</th><th scope="col">內容</th><th scope="col">存放位置</th><th scope="col">更新節奏</th></tr></thead><tbody>";
+let km="<thead><tr><th>分類</th><th>內容</th><th>存放位置</th><th>更新節奏</th></tr></thead><tbody>";
 ECO.km.taxonomy.forEach(k=>{km+=`<tr><td><b>${k.k}</b></td><td>${k.content}</td><td>${k.home}</td><td>${k.cycle}</td></tr>`;});
 document.getElementById("kmTbl").innerHTML=km+"</tbody>";
 document.getElementById("kmRules").innerHTML="<b>四條紀律：</b><br>"+ECO.km.rules.map(r=>"• "+r).join("<br>");
@@ -21730,7 +21730,7 @@ window.showSeg=function(id){
   </div>
   <div class="grid2">
     <div>
-      <table class="tbl"><thead><tr><th scope="col">收入項</th><th scope="col" class="r">月價</th><th scope="col" class="r">附掛</th><th scope="col" class="r">小計</th></tr></thead>
+      <table class="tbl"><thead><tr><th>收入項</th><th class="r">月價</th><th class="r">附掛</th><th class="r">小計</th></tr></thead>
       <tbody>${revRows}<tr><td><b class="hint" title="每位客戶每月平均收入＝各收入項的月價×附掛率加總。附掛率＝這個客群裡有多少比例會買這一項。">月ARPU</b></td><td></td><td></td><td class="r num" id="sgArpu" style="font-weight:700">—</td></tr>
       ${cstRows}<tr><td><b class="hint" title="月ARPU 減去該客戶帶來的變動成本。未扣公司固定成本（人力／系統／辦公），因此是邊際貢獻而非淨利。">月貢獻/客</b></td><td></td><td></td><td class="r num" id="sgCon" style="font-weight:700;color:var(--green)">—</td></tr></tbody></table>
       <div class="pgrp" style="margin-top:8px"><label class="hint" title="每月流失的客戶比例。1%＝平均留存約 100 個月（本模型以 60 個月封頂）。住宅型以租約年限反推、服務型參考訂閱業界留存曲線，兩者都是假設，M5 起以實際續約率取代。">月流失率 <b id="sgChV">${(e.churn*100).toFixed(1)}%</b></label><input type="range" id="sgCh" min="0.5" max="30" step="0.1" value="${(e.churn*100).toFixed(1)}"></div>
@@ -21840,15 +21840,15 @@ ECO.layers.forEach(L=>{
 });
 ls.innerHTML=lh;
 /* 22 risks */
-let rh="<thead><tr><th scope="col">ID</th><th scope="col">類別</th><th scope="col">風險敘述</th><th scope="col" class='r'>機率</th><th scope="col" class='r'>衝擊</th><th scope="col" class='r'>分數</th><th scope="col">等級</th><th scope="col">因應</th><th scope="col">Owner</th></tr></thead><tbody>";
+let rh="<thead><tr><th>ID</th><th>類別</th><th>風險敘述</th><th class='r'>機率</th><th class='r'>衝擊</th><th class='r'>分數</th><th>等級</th><th>因應</th><th>Owner</th></tr></thead><tbody>";
 ECO.risks.forEach(k=>{const sc=k.p*k.i;const lv=sc>=16?["極高","var(--red)"]:sc>=10?["高","var(--amber)"]:sc>=5?["中","var(--blue)"]:["低","var(--green)"];
  rh+=`<tr><td>${k.id}</td><td>${k.cat}</td><td>${k.desc}</td><td class="r num">${k.p}</td><td class="r num">${k.i}</td><td class="r num"><b>${sc}</b></td><td><span class="badge" style="background:${lv[1]}22;color:${lv[1]}">${lv[0]}</span></td><td>${k.mit}</td><td>${k.own}</td></tr>`;});
 document.getElementById("riskTbl").innerHTML=rh+"</tbody>";
-let gh="<thead><tr><th scope="col">Gate</th><th scope="col">類別</th><th scope="col">要求</th><th scope="col">主管機關</th><th scope="col">層級</th><th scope="col">狀態</th><th scope="col">階段</th></tr></thead><tbody>";
+let gh="<thead><tr><th>Gate</th><th>類別</th><th>要求</th><th>主管機關</th><th>層級</th><th>狀態</th><th>階段</th></tr></thead><tbody>";
 ECO.gates.forEach(g=>{const ok=g.st.startsWith("通過")||g.st.startsWith("已");
  gh+=`<tr><td>${g.id}</td><td>${g.cat}</td><td>${g.req}</td><td>${g.org}</td><td>${g.lv==="強制"?'<span class="badge b-red">強制</span>':'<span class="badge b-fact">參考</span>'}</td><td><span class="badge ${ok?'b-green':'b-asm'}">${g.st}</span></td><td>${g.stages}</td></tr>`;});
 document.getElementById("gateTbl").innerHTML=gh+"</tbody>";
-let ah="<thead><tr><th scope="col">#</th><th scope="col">事項</th><th scope="col">階段</th><th scope="col">Owner</th><th scope="col">期限</th><th scope="col">狀態</th></tr></thead><tbody>";
+let ah="<thead><tr><th>#</th><th>事項</th><th>階段</th><th>Owner</th><th>期限</th><th>狀態</th></tr></thead><tbody>";
 ECO.actions.forEach((a,i)=>{ah+=`<tr><td>${i+1}</td><td>${a.t}</td><td>${a.src}</td><td>${a.own}</td><td>${a.due}</td><td><span class="badge ${a.st==="完成"?"b-green":"b-asm"}">${a.st}</span></td></tr>`;});
 document.getElementById("actTbl").innerHTML=ah+"</tbody>";
 })();
@@ -21871,7 +21871,7 @@ window.renderRegions=function(){
     return {g,aRef,mRef,sSen,sRent,sHub,total};
   }).sort((a,b)=>b.total-a.total);
   const city=document.getElementById("regCity")?document.getElementById("regCity").value:"全部";
-  let h=`<div class="scrollx"><table class="tbl"><thead><tr><th scope="col">排名</th><th scope="col">行政區</th><th scope="col">縣市</th><th scope="col" class="r">65+占比</th><th scope="col" class="r">套房</th><th scope="col" class="r">兩房</th><th scope="col" class="r">A型參考</th><th scope="col" class="r">大眾參考</th><th scope="col">集團據點</th><th scope="col" class="r">高齡</th><th scope="col" class="r">租金適配</th><th scope="col" class="r">據點</th><th scope="col" class="r">總分</th><th scope="col">資料分級</th></tr></thead><tbody>`;
+  let h=`<div class="scrollx"><table class="tbl"><thead><tr><th>排名</th><th>行政區</th><th>縣市</th><th class="r">65+占比</th><th class="r">套房</th><th class="r">兩房</th><th class="r">A型參考</th><th class="r">大眾參考</th><th>集團據點</th><th class="r">高齡</th><th class="r">租金適配</th><th class="r">據點</th><th class="r">總分</th><th>資料分級</th></tr></thead><tbody>`;
   let rank=0;
   rows.forEach(x=>{rank++;
     if(city!=="全部"&&x.g.city!==city)return;
@@ -22059,7 +22059,7 @@ const CALC=[
   "代管件數、包租戶數、營業處所數","應繳保證金與下一級距預警"],
 ];
 document.getElementById("calcMap").innerHTML=`<div class="scrollx"><table class="tbl">
-<thead><tr><th scope="col">你要回答的問題</th><th scope="col">模型</th><th scope="col">網頁工具</th><th scope="col">Excel位置</th><th scope="col">要填什麼（輸入）</th><th scope="col">算出什麼（輸出）</th></tr></thead>
+<thead><tr><th>你要回答的問題</th><th>模型</th><th>網頁工具</th><th>Excel位置</th><th>要填什麼（輸入）</th><th>算出什麼（輸出）</th></tr></thead>
 <tbody>${CALC.map(c=>`<tr><td><b>${c[0]}</b></td><td>${c[1]}</td><td><a href="#" data-go="${(c[2].match(/模組(\d+)/)||[])[1]?"m"+((c[2].match(/模組(\d+)/)||[])[1].padStart(2,"0")):""}">${c[2]}</a></td><td>${c[3]}</td><td>${c[4]}</td><td>${c[5]}</td></tr>`).join("")}</tbody></table></div>`;
 /* 通用跳轉 */
 document.querySelectorAll("[data-go]").forEach(el=>{
@@ -22272,7 +22272,7 @@ function renderMine(rid){
     const cat=pf.svc, svcs=ECO.services.filter(s=>s.cat===cat);
     h+=`<div class="card"><h2>您的服務類別：${cat||""}</h2>
       <h3>這一類服務的法定資格與付費來源</h3>
-      <div class="scrollx"><table class="tbl"><thead><tr><th scope="col">服務</th><th scope="col">法定資格要求</th><th scope="col">誰來提供</th><th scope="col">付費來源</th></tr></thead>
+      <div class="scrollx"><table class="tbl"><thead><tr><th>服務</th><th>法定資格要求</th><th>誰來提供</th><th>付費來源</th></tr></thead>
       <tbody>${svcs.map(s=>`<tr><td><b>${s.name}</b></td><td>${s.qual}</td><td>${s.provider}</td><td>${s.pay}</td></tr>`).join("")}</tbody></table></div>
       <h3>與平台合作的五個步驟</h3>
       <div class="jline">${(JNY.find(j=>j.id==="JNY-04")||{steps:[]}).steps.map((s,i)=>
@@ -22691,7 +22691,7 @@ const UX=[
 ];
 const ub=document.getElementById("uxBoard");
 if(ub) ub.innerHTML=`<div class="scrollx"><table class="tbl">
-<thead><tr><th scope="col" style="width:170px">準則</th><th scope="col" style="width:90px">狀態</th><th scope="col">目前做法（現況）</th><th scope="col">待補（已列入計畫）</th></tr></thead>
+<thead><tr><th style="width:170px">準則</th><th style="width:90px">狀態</th><th>目前做法（現況）</th><th>待補（已列入計畫）</th></tr></thead>
 <tbody>${UX.map(u=>`<tr><td><b>${u[0]}</b></td><td>${u[1]}</td><td>${u[2]}</td><td style="color:var(--red)">${u[3]}</td></tr>`).join("")}</tbody></table></div>
 <div class="grid3" style="margin-top:14px">
  <div class="stat good"><div class="lb">已納入</div><div class="v">${UX.filter(u=>u[1].startsWith("✅")).length} / 10</div></div>
@@ -22747,11 +22747,11 @@ if(ab&&A){
        <div class="archnote">${L.note}</div>
      </div>`).join("")}</div>
    <h3>層與層之間的因果</h3>
-   <div class="scrollx"><table class="tbl"><thead><tr><th scope="col">從</th><th scope="col">到</th><th scope="col">因果關係</th></tr></thead>
+   <div class="scrollx"><table class="tbl"><thead><tr><th>從</th><th>到</th><th>因果關係</th></tr></thead>
    <tbody>${A.flows.map(f=>`<tr><td><b>${f[0]}</b></td><td><b>${f[1]}</b></td><td>${f[2]}</td></tr>`).join("")}</tbody></table></div>
    <div class="advice" style="margin-top:14px"><b>🔄 閉環</b><p>${A.loop}</p></div>
    <h3>Excel 分頁 ↔ 網站模組對照</h3>
-   <div class="scrollx"><table class="tbl"><thead><tr><th scope="col">群組</th><th scope="col">Excel 分頁</th><th scope="col">網站模組</th><th scope="col">頁籤色</th></tr></thead>
+   <div class="scrollx"><table class="tbl"><thead><tr><th>群組</th><th>Excel 分頁</th><th>網站模組</th><th>頁籤色</th></tr></thead>
    <tbody>${ECO.sheet_map.map(m=>`<tr><td><b>${m[0]}</b></td><td>${m[1]}</td><td>${m[2]}</td><td>${m[3]}</td></tr>`).join("")}</tbody></table></div>
    <div class="note">Excel 分頁編號規則：十位數＝功能群組、個位數＝群內順序；跳號是刻意保留擴充空間。</div>
   </div>`;
@@ -22914,8 +22914,8 @@ function render(){
   </div>
   <div class="card"><h3>各客群投資效率（點欄位標題可排序意義見備註）</h3>
   <div class="scrollx"><table class="tbl"><thead><tr>
-    <th scope="col">納入</th><th scope="col">客群</th><th scope="col">投資型態</th><th scope="col" class="r">每客戶投入</th><th scope="col" class="r">月貢獻</th>
-    <th scope="col" class="r">Y5客數</th><th scope="col" class="r">IRR</th><th scope="col" class="r">NPV@10%</th><th scope="col" class="r">回收</th><th scope="col" class="r">規模倍率</th><th scope="col">判讀</th></tr></thead>
+    <th>納入</th><th>客群</th><th>投資型態</th><th class="r">每客戶投入</th><th class="r">月貢獻</th>
+    <th class="r">Y5客數</th><th class="r">IRR</th><th class="r">NPV@10%</th><th class="r">回收</th><th class="r">規模倍率</th><th>判讀</th></tr></thead>
   <tbody>${rows.map(x=>`<tr>
     <td><input type="checkbox" class="pchk" data-s="${x.s.id}" ${st[x.s.id].on?"checked":""}></td>
     <td><b>${x.s.id}</b> ${x.s.name}</td><td>${x.type}</td>
@@ -23097,7 +23097,7 @@ function showCodes(){
     m.addEventListener("keydown",e=>{if(e.key==="Escape"){m.style.display="none";if(window.__lastFocus&&window.__lastFocus.focus)window.__lastFocus.focus();}});
     m.innerHTML=`<div class="cbox"><button class="cx">✕</button><h3>代碼說明</h3>
       <p style="font-size:.85rem;color:var(--slate);margin-bottom:10px">工具中出現的英文代號一覽（Excel 對照分頁見最右欄）。</p>
-      <div class="scrollx"><table class="tbl"><thead><tr><th scope="col">代碼</th><th scope="col">全稱</th><th scope="col">意思</th><th scope="col">在哪裡</th></tr></thead>
+      <div class="scrollx"><table class="tbl"><thead><tr><th>代碼</th><th>全稱</th><th>意思</th><th>在哪裡</th></tr></thead>
       <tbody>${ECO.code_dict.map(c=>`<tr><td><b>${c[0]}</b></td><td>${c[1]}</td><td>${c[2]}</td><td>${c[3]}</td></tr>`).join("")}</tbody></table></div></div>`;
     document.body.appendChild(m);
     m.onclick=e=>{if(e.target===m||e.target.classList.contains("cx"))m.classList.remove("on");};
@@ -23201,10 +23201,10 @@ function showSrc(){
     </div>
     <p style="font-size:.85rem;margin:12px 0 6px">${S.builtin}</p>
     <h4 style="margin:12px 0 6px;color:var(--navy)">資料分級</h4>
-    <div class="scrollx"><table class="tbl"><thead><tr><th scope="col">等級</th><th scope="col">內容</th><th scope="col">使用限制</th></tr></thead>
+    <div class="scrollx"><table class="tbl"><thead><tr><th>等級</th><th>內容</th><th>使用限制</th></tr></thead>
     <tbody>${S.layers.map(l=>`<tr><td><b>${l[0]}</b></td><td>${l[1]}</td><td>${l[2]}</td></tr>`).join("")}</tbody></table></div>
     <h4 style="margin:14px 0 6px;color:var(--navy)">快照怎麼運作</h4>
-    <div class="scrollx"><table class="tbl"><thead><tr><th scope="col">情況</th><th scope="col">行為</th></tr></thead>
+    <div class="scrollx"><table class="tbl"><thead><tr><th>情況</th><th>行為</th></tr></thead>
     <tbody>${S.snapshot.map(l=>`<tr><td><b>${l[0]}</b></td><td>${l[1]}</td></tr>`).join("")}</tbody></table></div>
     </div>`;
   m.classList.add("on");
@@ -23245,7 +23245,7 @@ if(tb&&ECO.counties){
       <div class="stat good"><div class="lb">★電梯大樓租金溢價</div><div class="v num">20–30%</div><div class="note" style="margin:0">官方首度統計・適老改造定價依據</div></div>
       <div class="stat"><div class="lb">新成屋 vs 中古屋</div><div class="v num">+20%</div><div class="note" style="margin:0">中古屋再比老屋高10%</div></div>
     </div>
-    <div class="scrollx"><table class="tbl"><thead><tr><th scope="col">縣市</th><th scope="col" class="r">65+占比</th><th scope="col">超高齡</th><th scope="col" class="r">租金中位數</th><th scope="col" class="r">可負擔性</th><th scope="col">等級</th><th scope="col">建議主線</th><th scope="col">說明</th></tr></thead>
+    <div class="scrollx"><table class="tbl"><thead><tr><th>縣市</th><th class="r">65+占比</th><th>超高齡</th><th class="r">租金中位數</th><th class="r">可負擔性</th><th>等級</th><th>建議主線</th><th>說明</th></tr></thead>
     <tbody>${rows.map(c=>{
       const aff=(c.rent_med/nat).toFixed(2);
       const line=c.rent_med>=10000?"高端線可行＋大眾線":(c.rent_med>=7500?"大眾線為主、高端線試點":"大眾線與照護線");
@@ -23256,7 +23256,7 @@ if(tb&&ECO.counties){
       <td>${line}</td><td style="font-size:.8rem">${c.note}</td></tr>`;}).join("")}</tbody></table></div>
   </div>
   <div class="card"><h3>官方租金統計的結構性發現</h3>
-    <div class="scrollx"><table class="tbl"><thead><tr><th scope="col">項目</th><th scope="col">數值</th><th scope="col">來源</th><th scope="col">等級</th></tr></thead>
+    <div class="scrollx"><table class="tbl"><thead><tr><th>項目</th><th>數值</th><th>來源</th><th>等級</th></tr></thead>
     <tbody>${ECO.rent_facts.map(f=>`<tr><td><b>${f[0]}</b></td><td>${f[1]}</td><td>${f[2]}</td><td><span class="badge b-green">${f[3]}</span></td></tr>`).join("")}</tbody></table></div>
   </div>
   <div class="card"><h3>全台市場的五個策略意涵</h3>
@@ -23343,9 +23343,9 @@ window.renderRegions=function(){
     const sHub=g.hub&&g.hub.startsWith("★")?5:(g.hub==="—"?1:3);
     return {g,aRef,mRef,sSen,sRent,sHub,total:sSen*0.35+sRent*0.35+sHub*0.3};
   }).filter(x=>county==="全部"||x.g.county===county).sort((a,b)=>b.total-a.total);
-  let h=`<div class="scrollx"><table class="tbl"><thead><tr><th scope="col">排名</th><th scope="col">縣市</th><th scope="col">行政區</th><th scope="col">區位</th>
-    <th scope="col" class="r">65+占比</th><th scope="col" class="r">套房</th><th scope="col" class="r">兩房</th><th scope="col" class="r">A型參考</th><th scope="col" class="r">大眾參考</th>
-    <th scope="col">集團據點</th><th scope="col" class="r">總分</th><th scope="col">資料分級</th></tr></thead><tbody>`;
+  let h=`<div class="scrollx"><table class="tbl"><thead><tr><th>排名</th><th>縣市</th><th>行政區</th><th>區位</th>
+    <th class="r">65+占比</th><th class="r">套房</th><th class="r">兩房</th><th class="r">A型參考</th><th class="r">大眾參考</th>
+    <th>集團據點</th><th class="r">總分</th><th>資料分級</th></tr></thead><tbody>`;
   rows.slice(0,80).forEach((x,i)=>{
     h+=`<tr style="${x.total>=3.8?'background:var(--warm)':''}"><td class="num">${i+1}</td><td>${x.g.county}</td>
     <td><b>${x.g.district}</b></td><td style="font-size:.78rem;color:var(--mut)">${x.g.typename||""}</td>
@@ -23414,7 +23414,7 @@ function render(){
     const grp={};I.forEach(x=>{const k=(x.source||"").includes("內政部")||(x.source||"").includes("衛福")||(x.source||"").includes("行政院")?"官方統計":( (x.conf==="A")?"官方／一手":"業界與國際");(grp[k]=grp[k]||[]).push(x);});
     body=`<div class="card"><h3>市場數據儀表　<span class="badge ${stale?"b-red":"b-green"}">${stale?stale+" 筆逾期（>120天）":"全部在效期內"}</span></h3>
       <p style="font-size:.85rem;color:var(--slate)">每筆都附來源、查證日與信心等級；超過 120 天自動標示「待更新」。</p>
-      <div class="scrollx"><table class="tbl"><thead><tr><th scope="col">ID</th><th scope="col">查證事實</th><th scope="col">來源</th><th scope="col">查證日</th><th scope="col">信心</th><th scope="col">狀態</th></tr></thead>
+      <div class="scrollx"><table class="tbl"><thead><tr><th>ID</th><th>查證事實</th><th>來源</th><th>查證日</th><th>信心</th><th>狀態</th></tr></thead>
       <tbody>${I.map(x=>{const d=days(x.date);const old=d!==null&&d>120;
         return `<tr><td>${x.id}</td><td>${x.fact}</td><td>${x.source}</td><td class="num">${x.date}</td>
         <td><span class="badge ${x.conf==="A"?"b-green":(x.conf==="B"?"b-amber":"b-red")}">${x.conf}</span></td>
@@ -23430,7 +23430,7 @@ function render(){
         <div class="pmean">${p.mean}</div></div>`).join("")}</div></div>`;
   } else {
     body=`<div class="card"><h3>情報維護機制</h3>
-      <div class="scrollx"><table class="tbl"><thead><tr><th scope="col">類別</th><th scope="col">更新節奏</th><th scope="col">負責</th><th scope="col">規則</th></tr></thead>
+      <div class="scrollx"><table class="tbl"><thead><tr><th>類別</th><th>更新節奏</th><th>負責</th><th>規則</th></tr></thead>
       <tbody>${(O.cycle||[]).map(c=>`<tr><td><b>${c[0]}</b></td><td>${c[1]}</td><td>${c[2]}</td><td>${c[3]}</td></tr>`).join("")}</tbody></table></div>
       <h3>三條紀律</h3><ul class="chk">${(O.rule||[]).map(r=>`<li><span style="color:var(--accent);font-weight:700">規</span><span>${r}</span></li>`).join("")}</ul>
       <h3>目前正在追蹤（Watch List）</h3>
@@ -23497,7 +23497,7 @@ function dash(){
     <div class="stat"><div class="lb">${c[0]}</div><div class="num" style="${c[0].includes("紅線")||c[0].includes("阻擋")?"color:var(--red)":""}">${c[1]}<small>${c[2]}</small></div>
     <div class="condnote">${c[3]}</div></div>`).join("")}</div>
   <div class="card"><h3>十大合規類別 — 各自在管什麼</h3>
-    <div class="scrollx"><table class="tbl"><thead><tr><th scope="col">代碼</th><th scope="col">分類</th><th scope="col">為什麼重要</th><th scope="col" class="num">條目</th><th scope="col" class="num">★★★</th><th scope="col" class="num">已完成</th><th scope="col"></th></tr></thead><tbody>
+    <div class="scrollx"><table class="tbl"><thead><tr><th>代碼</th><th>分類</th><th>為什麼重要</th><th class="num">條目</th><th class="num">★★★</th><th class="num">已完成</th><th></th></tr></thead><tbody>
     ${cats.map(c=>{const it=C().filter(x=>x.cat===c[0]);
       const d=it.filter(x=>stOf(x)==="已完成").length, n3=it.filter(x=>x.risk==="★★★").length;
       const pct=it.length?Math.round(d/it.length*100):0;
