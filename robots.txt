@@ -1,4 +1,4 @@
-# /full/ 不進搜尋引擎（僅降低曝光，非存取控制——擋不住拿到網址的人）
+# 內部工具頁不在此列出——robots.txt 全網可讀，列出路徑等於公告。
+# 該頁以頁內 noindex,nofollow 阻擋收錄（僅降低曝光，非存取控制）。
 User-agent: *
-Disallow: /full/
 Allow: /
