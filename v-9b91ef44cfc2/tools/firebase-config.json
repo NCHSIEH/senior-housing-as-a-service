@@ -1,0 +1,11 @@
+{
+  "_說明": "Firebase 網頁設定。apiKey 是公開識別碼、不是密碼——任何人打開網頁原始碼都看得到；真正的防線是 firebase/firestore.rules。此檔不進版控（見 .gitignore），由業主填入或部署流程產生。",
+  "_專案": "senior-housing-rghealth（2026-08-30 建立，專案編號 104693005842）",
+
+  "apiKey": "AIzaSyBouIkx59kNO3hsIsmLRDlsSAWU93e3vGw",
+  "authDomain": "senior-housing-rghealth.firebaseapp.com",
+  "projectId": "senior-housing-rghealth",
+  "storageBucket": "senior-housing-rghealth.firebasestorage.app",
+  "messagingSenderId": "104693005842",
+  "appId": "1:104693005842:web:c31b5af3bbcce1117662cb"
+}

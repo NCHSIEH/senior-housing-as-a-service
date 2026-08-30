@@ -823,6 +823,67 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
 </style>
 </head>
 <body>
+<!--WEBAPP-LINK-->
+<div id="webappBar" style="display:none">
+  <div class="wab-in">
+    <span class="wab-tag">網站版工具</span>
+    <span class="wab-txt" id="wabTxt"></span>
+    <a class="wab-go" id="wabGo" href="./tools/">開啟試算工具 →</a>
+  </div>
+</div>
+<style>
+#webappBar{background:linear-gradient(90deg,#16233A,#22334E);color:#E8E3DA;
+  border-bottom:1px solid #243448;font-size:.86rem}
+#webappBar .wab-in{max-width:1400px;margin:0 auto;padding:.5rem 1rem;
+  display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;line-height:1.6}
+#webappBar .wab-tag{font-size:.7rem;letter-spacing:.06em;background:#9C6B3C;color:#fff;
+  padding:.1rem .45rem;border-radius:3px;flex:none}
+#webappBar .wab-txt{flex:1 1 20rem}
+#webappBar .wab-go{color:#fff;font-weight:600;text-decoration:none;
+  border:1px solid #3C4E6B;border-radius:6px;padding:.25rem .7rem;white-space:nowrap;
+  transition:background .2s}
+#webappBar .wab-go:hover{background:#2C4260}
+#webappBar .wab-go.off{opacity:.55;cursor:default;border-style:dashed}
+@media print{#webappBar{display:none!important}}
+</style>
+<script>
+(function(){
+  var bar=document.getElementById('webappBar');
+  var txt=document.getElementById('wabTxt');
+  var go=document.getElementById('wabGo');
+  if(!bar) return;
+  // 判準是「隔壁有沒有 tools 資料夾」，不是「在哪個網域」。
+  // 同一份 index.html 會出現在四個位置：
+  //   file:              單檔版（雙擊開啟）        → 沒有相鄰 tools
+  //   /v-〈碼〉/          GitHub Pages 與 Firebase   → 有相鄰 tools
+  //   /full/             GitHub Pages 的舊網址      → 沒有相鄰 tools
+  // 早期版本用 hostname 判斷是錯的：github.io 的隨機路徑底下工具是存在的。
+  var path = location.pathname || '';
+  var noLink = null;
+  if(location.protocol === 'file:'){
+    noLink='此為單機檔案版，工具請改以網站版開啟。';
+  }else if(/\/full\/?(index\.html)?$/.test(path)){
+    // 刻意不在這裡寫出隨機路徑：/full/ 是半公開網址，
+    // 把內部路徑印在上面等於公告它的位置
+    noLink='本頁為舊網址，工具在另一個內部網址下。';
+  }
+  if(noLink){
+    txt.textContent='財務試算、客群投資組合與匯出，已移到網站版專用工具。'
+      + noLink + '網址請洽內部窗口索取。';
+    go.className='wab-go off';
+    go.removeAttribute('href');
+    go.textContent='需開啟網站版';
+  }else{
+    txt.textContent='財務試算、客群投資組合、匯出與參數維護，已改由網站版專用工具提供'
+      +'——數字與 Excel 交付檔同源，改參數即時重算。';
+  }
+  bar.style.display='block';
+})();
+</script>
+<!--/WEBAPP-LINK-->
+
+
+
 <a href="#wsmain" class="skip">跳到主要內容</a>
 <header id="apphdr">
   <div class="hdrwrap">
@@ -832,7 +893,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
     </button>
     <div class="hdrtools">
       <span class="hbtn" id="switchRoleWrap">👤 <b id="roleChip">選擇身分</b>　<span id="switchRole" style="text-decoration:underline;cursor:pointer">切換</span></span>
-      <label class="hbtn" id="xlsxLbl" title="載入主工具 Excel，把最新的地區市場數據帶進網頁">📂 載入Excel<input type="file" id="xlsxIn" accept=".xlsx,.csv" style="position:absolute;inset:0;opacity:0;cursor:pointer"></label>
+      <label class="hbtn" id="xlsxLbl" title="載入 Excel 交付檔，把最新的地區市場數據帶進網頁">📂 載入Excel<input type="file" id="xlsxIn" accept=".xlsx,.csv" style="position:absolute;inset:0;opacity:0;cursor:pointer"></label>
       <button class="hbtn" id="loadHelp" title="說明：要載入哪個檔案、為什麼" aria-label="載入說明">❓</button>
       <span class="gswrap"><input id="gsearch" type="search" placeholder="搜尋全部模組（按 / ）" aria-label="全域搜尋：跨所有模組全文檢索" autocomplete="off"><div id="gsresults" role="listbox" aria-label="搜尋結果" hidden></div></span>
       <button class="hbtn" id="skinBtn" title="切換版面主題、字級與密度" aria-label="外觀設定：主題、字級與密度" aria-expanded="false">🎨 外觀</button>
