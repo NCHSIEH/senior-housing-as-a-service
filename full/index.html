@@ -828,7 +828,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
   <div class="wab-in">
     <span class="wab-tag">網站版工具</span>
     <span class="wab-txt" id="wabTxt"></span>
-    <a class="wab-go" id="wabGo" href="./tools/">開啟試算工具 →</a>
+    <a class="wab-go" id="wabGo" href="https://senior-housing-rghealth.web.app/tools/">開啟試算工具 →</a>
   </div>
 </div>
 <style>
@@ -852,35 +852,33 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
   var txt=document.getElementById('wabTxt');
   var go=document.getElementById('wabGo');
   if(!bar) return;
-  // 判準是「隔壁有沒有 tools 資料夾」，不是「在哪個網域」。
-  // 同一份 index.html 會出現在四個位置：
-  //   file:              單檔版（雙擊開啟）        → 沒有相鄰 tools
-  //   /v-〈碼〉/          GitHub Pages 與 Firebase   → 有相鄰 tools
-  //   /full/             GitHub Pages 的舊網址      → 沒有相鄰 tools
-  // 早期版本用 hostname 判斷是錯的：github.io 的隨機路徑底下工具是存在的。
-  var path = location.pathname || '';
-  var noLink = null;
-  if(location.protocol === 'file:'){
-    noLink='此為單機檔案版，工具請改以網站版開啟。';
-  }else if(/\/full\/?(index\.html)?$/.test(path)){
-    // 刻意不在這裡寫出隨機路徑：/full/ 是半公開網址，
-    // 把內部路徑印在上面等於公告它的位置
-    noLink='本頁為舊網址，工具在另一個內部網址下。';
-  }
-  if(noLink){
+  // 工具只有一個家（Firebase），連結是絕對網址，所以四個環境都通：
+  // Firebase /full/、GitHub Pages /full/、單檔版 file:、以及日後的隨機路徑。
+  // 早期版本試過用相對路徑 ./tools/ 加上環境判斷，判準先寫 protocol 又改 hostname，
+  // 兩次都錯（工具當時也發布在 GitHub Pages，./tools/ 在那裡其實存在）。
+  // 絕對網址讓這個判斷整個消失。
+  var url = go.getAttribute('href') || '';
+  if(!url || url.indexOf('__TOOLS') === 0){
+    // ecomap_data.json 沒設 meta.tools_url，寧可不給連結也不要給死連結
     txt.textContent='財務試算、客群投資組合與匯出，已移到網站版專用工具。'
-      + noLink + '網址請洽內部窗口索取。';
+      +'本份導覽器未設定工具網址，請洽內部窗口索取。';
     go.className='wab-go off';
     go.removeAttribute('href');
     go.textContent='需開啟網站版';
   }else{
-    txt.textContent='財務試算、客群投資組合、匯出與參數維護，已改由網站版專用工具提供'
-      +'——數字與 Excel 交付檔同源，改參數即時重算。';
+    txt.textContent='財務試算、客群投資組合、參數維護與匯出，已改由網站版專用工具提供'
+      +'——數字與 Excel 交付檔同源，改參數即時重算。工具需以公司帳號登入。';
+    go.setAttribute('target','_blank');
+    go.setAttribute('rel','noopener');
   }
   bar.style.display='block';
+
 })();
 </script>
 <!--/WEBAPP-LINK-->
+
+
+
 
 
 
@@ -893,11 +891,8 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
     </button>
     <div class="hdrtools">
       <span class="hbtn" id="switchRoleWrap">👤 <b id="roleChip">選擇身分</b>　<span id="switchRole" style="text-decoration:underline;cursor:pointer">切換</span></span>
-      <label class="hbtn" id="xlsxLbl" title="載入 Excel 交付檔，把最新的地區市場數據帶進網頁">📂 載入Excel<input type="file" id="xlsxIn" accept=".xlsx,.csv" style="position:absolute;inset:0;opacity:0;cursor:pointer"></label>
-      <button class="hbtn" id="loadHelp" title="說明：要載入哪個檔案、為什麼" aria-label="載入說明">❓</button>
       <span class="gswrap"><input id="gsearch" type="search" placeholder="搜尋全部模組（按 / ）" aria-label="全域搜尋：跨所有模組全文檢索" autocomplete="off"><div id="gsresults" role="listbox" aria-label="搜尋結果" hidden></div></span>
       <button class="hbtn" id="skinBtn" title="切換版面主題、字級與密度" aria-label="外觀設定：主題、字級與密度" aria-expanded="false">🎨 外觀</button>
-      <button class="hbtn" id="expBtn" aria-label="匯出目前參數為 JSON 檔">⬇ 匯出參數</button>
     </div>
   </div>
 </header>
@@ -1615,7 +1610,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
   <h2>23｜地區市場數據 — 全台 368 鄉鎮市區與示範生活圈評分</h2>
   <div class="datawarn"><b>⚠ 資料分級警語：</b>本表僅 <span class="gradechip gB">B級</span> 之北部 40 區為業界行情彙整（開會可用，簽約前須以實價登錄或591抽樣校準）；其餘為 <span class="gradechip gC">C級</span> 模型推估（<b>擬真值</b>，租金＝縣市官方中位數×區位指數推算），僅供相對比較與工具驗證。<b>在 M1 以實價登錄與民政局月報完成校準前，C 級資料不得作為選址、投資決策或對外簡報之依據。</b></div>
   <p style="font-size:.85rem">租金為2026雙北業界行情彙整<span class="badge b-fact">B級</span>；65+占比為推估<span class="badge b-asm">待官方月報校準</span>；集團據點為<span class="badge b-fact">A級</span>。
-  <b>總分＝高齡密度×35% ＋ 租金適配×35% ＋ 集團據點×30%</b>。可用右上「載入Excel更新」以主工具『23_地區市場』分頁的實測值即時覆蓋。</p>
+  <b>總分＝高齡密度×35% ＋ 租金適配×35% ＋ 集團據點×30%</b>。數值來自資料主檔，於每次重產時更新；要改參數試算請用網站版工具。</p>
   <div class="pgrp"><label>縣市篩選</label>
     <select id="regCity" style="max-width:180px;padding:6px 10px;border:1px solid var(--line);border-radius:8px">
       <option>全部</option><option>台北</option><option>新北</option>
@@ -17461,7 +17456,7 @@ renderA();renderB();renderX();renderT();renderC();renderG();
   [
    "9x 維護",
    "90資料維護／91選單／92代碼表",
-   "右上「載入Excel」與「匯出參數」",
+   "右上的搜尋與外觀設定",
    "灰"
   ]
  ],
@@ -21999,94 +21994,7 @@ window.renderRegions=function(){
 <script>
 renderRegions();
 </script>
-<script>
-"use strict";
-/* XLSXLite：零依賴 .xlsx 讀取器（ZIP解析 + 瀏覽器原生 DecompressionStream 解壓 + DOMParser 解析）
-   僅供本工具讀取指定分頁；解析全在本機，不上傳。 */
-window.XLSXLite=(function(){
-  const u8=(b,o)=>b[o], u16=(b,o)=>b[o]|(b[o+1]<<8), u32=(b,o)=>(b[o]|(b[o+1]<<8)|(b[o+2]<<16)|(b[o+3]<<24))>>>0;
-  async function inflateRaw(bytes){
-    if(typeof DecompressionStream!=="function") throw new Error("此瀏覽器不支援 DecompressionStream，請改用 CSV 匯入");
-    const ds=new DecompressionStream("deflate-raw");
-    const s=new Blob([bytes]).stream().pipeThrough(ds);
-    return new Uint8Array(await new Response(s).arrayBuffer());
-  }
-  async function unzip(buf){
-    const b=new Uint8Array(buf); const files={};
-    // 找 End of Central Directory
-    let eo=-1;
-    for(let i=b.length-22;i>=Math.max(0,b.length-66000);i--){ if(u32(b,i)===0x06054b50){eo=i;break;} }
-    if(eo<0) throw new Error("不是有效的 xlsx 檔");
-    const cnt=u16(b,eo+10), cdOff=u32(b,eo+16);
-    let p=cdOff;
-    for(let i=0;i<cnt;i++){
-      if(u32(b,p)!==0x02014b50) break;
-      const method=u16(b,p+10), csize=u32(b,p+20), usize=u32(b,p+24);
-      const nlen=u16(b,p+28), elen=u16(b,p+30), clen=u16(b,p+32), lho=u32(b,p+42);
-      const name=new TextDecoder().decode(b.subarray(p+46,p+46+nlen));
-      // 本地檔頭
-      const lnlen=u16(b,lho+26), lelen=u16(b,lho+28);
-      const dstart=lho+30+lnlen+lelen;
-      files[name]={method,data:b.subarray(dstart,dstart+csize),usize};
-      p+=46+nlen+elen+clen;
-    }
-    return {
-      async text(name){
-        const f=files[name]; if(!f) return null;
-        const raw=f.method===0?f.data:await inflateRaw(f.data);
-        return new TextDecoder("utf-8").decode(raw);
-      },
-      names:Object.keys(files)
-    };
-  }
-  function colToIdx(ref){ // "AB12" -> 27
-    let s=0; for(const ch of ref){ const c=ch.charCodeAt(0); if(c<65||c>90) break; s=s*26+(c-64); } return s;
-  }
-  async function readSheet(file,sheetName){
-    const z=await unzip(await file.arrayBuffer());
-    const wbXml=await z.text("xl/workbook.xml");
-    const relXml=await z.text("xl/_rels/workbook.xml.rels");
-    if(!wbXml) throw new Error("找不到 workbook.xml");
-    const dp=new DOMParser();
-    const wb=dp.parseFromString(wbXml,"application/xml");
-    const rels=dp.parseFromString(relXml,"application/xml");
-    const relMap={}; [...rels.getElementsByTagName("Relationship")].forEach(r=>relMap[r.getAttribute("Id")]=r.getAttribute("Target"));
-    let target=null;
-    [...wb.getElementsByTagName("sheet")].forEach(s=>{
-      if(s.getAttribute("name")===sheetName){
-        const rid=s.getAttribute("r:id")||s.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id");
-        let t=relMap[rid]||""; if(t && !t.startsWith("xl/")) t="xl/"+t.replace(/^\/?/,"");
-        target=t;
-      }});
-    if(!target) throw new Error("找不到分頁："+sheetName);
-    const sstXml=await z.text("xl/sharedStrings.xml");
-    let sst=[];
-    if(sstXml){ const sd=dp.parseFromString(sstXml,"application/xml");
-      sst=[...sd.getElementsByTagName("si")].map(si=>[...si.getElementsByTagName("t")].map(t=>t.textContent).join("")); }
-    const shXml=await z.text(target);
-    const sd=dp.parseFromString(shXml,"application/xml");
-    const rows=[];
-    [...sd.getElementsByTagName("row")].forEach(rw=>{
-      const arr=[];
-      [...rw.getElementsByTagName("c")].forEach(c=>{
-        const ref=c.getAttribute("r")||""; const idx=colToIdx(ref)-1;
-        const t=c.getAttribute("t");
-        const vEl=c.getElementsByTagName("v")[0];
-        const isEl=c.getElementsByTagName("is")[0];
-        let val=null;
-        if(t==="s"&&vEl) val=sst[+vEl.textContent];
-        else if(t==="inlineStr"&&isEl) val=[...isEl.getElementsByTagName("t")].map(x=>x.textContent).join("");
-        else if(vEl) { const n=parseFloat(vEl.textContent); val=isNaN(n)?vEl.textContent:n; }
-        if(idx>=0) arr[idx]=val;
-      });
-      rows.push(arr);
-    });
-    return rows;
-  }
-  return {readSheet};
-})();
 
-</script>
 
 <script>
 "use strict";
@@ -22494,42 +22402,6 @@ if(window.showPhase){
   };
 }
 const sr=document.getElementById("switchRole"); if(sr) sr.onclick=exit;
-document.getElementById("expBtn").onclick=()=>{
-  const out={exported:new Date().toISOString(),role,month,profile,gate_done:done,
-    regions:ECO.regions.map(r=>({區:r.district,senior:r.senior,studio:r.studio,r2:r.r2,r3:r.r3,hub:r.hub}))};
-  const b=new Blob([JSON.stringify(out,null,1)],{type:"application/json"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="SeniorHousing-EcoMap_參數匯出.json";a.click();
-};
-document.getElementById("xlsxIn").addEventListener("change",async e=>{
-  const f=e.target.files[0]; if(!f)return;
-  const apply=(rows,start)=>{let n=0;
-    rows.slice(start).forEach(r=>{if(!r||!r[0])return;
-      const dn=String(r[0]).trim(), cn=String(r[1]||"").trim();
-      const g=ECO.regions.find(x=>x.district===dn&&(!cn||x.county===cn||x.city===cn)); if(!g)return;
-      const num=v=>{const x=parseFloat(String(v).replace(/[,%\s]/g,""));return isNaN(x)?null:x;};
-      const s=num(r[2]); if(s!=null) g.senior=s>1?s/100:s;
-      const a=num(r[3]),b=num(r[4]); if(a!=null&&b!=null) g.studio=[a,b];
-      const c=num(r[5]),d=num(r[6]); if(c!=null&&d!=null) g.r2=[c,d];
-      const e2=num(r[7]),f2=num(r[8]); if(e2!=null&&f2!=null) g.r3=[e2,f2];
-      if(r[11]) g.hub=String(r[11]); n++;});
-    return n;};
-  try{
-    let n=0;
-    if(/\.csv$/i.test(f.name)){const t=await f.text();n=apply(t.split(/\r?\n/).map(l=>l.split(",")),0);}
-    else{n=apply(await XLSXLite.readSheet(f,"23_地區市場"),5);
-      try{const cr=await XLSXLite.readSheet(f,"27_法規合規總表"); const map={};
-        cr.forEach(row=>{if(!row||!row[0])return;const id=String(row[0]).trim();
-          if(/^[A-J]-\d{2}$/.test(id)&&row[10]) map[id]=String(row[10]).trim();});
-        if(window.applyCompStatus){const cn=window.applyCompStatus(map); if(cn) window.__compLoaded=cn;}
-      }catch(e2){}
-    }
-    if(!n){alert("讀到檔案，但沒有對應到任何行政區。請確認使用主工具『23_地區市場』分頁或其CSV。");return;}
-    if(typeof renderRegions==="function") renderRegions();
-    if(role&&R(role)&&R(role).home==="m30") renderMine(role);
-    if(window.afterExcelLoad) window.afterExcelLoad(n); else alert("✅ 已更新 "+n+" 個行政區。");
-    go("m23");
-  }catch(err){alert("讀取失敗："+err.message+"\n\n備援：把該分頁另存為 CSV 再載入。");}
-});
 document.querySelector(".brandmark").onclick=exit;
 renderPortal();
 /* v1.1：一律停在門戶總覽。存過身分只顯示「繼續上次」，不自動跳轉——
@@ -22671,7 +22543,7 @@ const HELP={
  m22:["這頁在回答：有什麼風險、法規門檻過了沒。",
    ["風險表已自動算分級（機率×衝擊）","門檻表中『強制』未通過＝該階段不能過","待辦看板是本週要解的事"],""],
  m23:["這頁在回答：22個行政區哪個適合當示範生活圈。",
-   ["用縣市篩選","看總分排序（高齡×租金適配×集團據點）","可用右上『載入Excel』換成實測數據"],""],
+   ["用縣市篩選","看總分排序（高齡×租金適配×集團據點）","數字由每次重產更新，與 Excel 交付檔同源"],""],
  m24:["這頁在回答：錢從哪來、誰來做、靠什麼贏。",
    ["由左到右讀五段價值鏈","點任一項可跳到細節模組","下方三張卡是關鍵判斷"],""],
  m25:["這頁在回答：八種角色的完整旅程與系統接觸點。",
@@ -22785,7 +22657,7 @@ const UX=[
 ["2 資訊架構 IA","✅ 已納入","門戶→工作區兩層；側欄六大分組；任一模組2–3步可達；Excel有00C分頁地圖與封面導覽","尚無全域搜尋；模組數達27時建議加入搜尋框（已列待辦）"],
 ["3 核心操作流程","🔶 部分","每模組頂部『怎麼用這一頁』三步驟；推動地圖有Gate勾選與進度；試算器輸入即時回饋","跨模組的完整任務串接（如：選客群→算單位經濟→定Gate）尚未做成引導式流程"],
 ["4 視覺層級與一致性","✅ 已納入","統一設計token（5主題）、章節編號、KPI數字卡、統一表格與徽章規則；Excel封面標示顏色規則（淡黃＝可填、黑字＝公式）","Excel部分舊分頁欄寬仍需逐頁微調"],
-["5 互動與系統回饋","🔶 部分","載入Excel成功/失敗/找不到分頁皆有明確訊息並提供備援（CSV）；試算即時重算；勾選狀態持久化","本工具為單機唯讀分析工具，無Loading/Timeout/權限等狀態；這些將在系統Ph1實作"],
+["5 互動與系統回饋","🔶 部分","試算即時重算；勾選狀態持久化；資料版本於頁首標示","本工具為單機唯讀分析工具，無Loading/Timeout/權限等狀態；這些將在系統Ph1實作"],
 ["6 錯誤預防與復原","🔶 部分","Excel輸入格用資料驗證下拉、公式鎖定於黑字欄；評分卡一票否決規則；網頁設定可隨時切回預設","網頁試算無『還原預設值』按鈕（已列待辦）；Excel無自動備份，靠版本目錄"],
 ["7 文字與術語","✅ 已納入","全站先講人話再講術語（如『這頁在回答…』）；紅線以行為敘述而非法條編號；每個數字標示證據等級","英文縮寫（LTV/CAC/IRR）首次出現處建議加註（部分已加）"],
 ["8 無障礙 Accessibility","🔶 部分","高對比主題（17px起、粗框、AAA對比）、字級四段可調、鍵盤focus樣式、不只靠顏色（同時用文字標籤）","尚未做螢幕閱讀器完整測試與ARIA標記；圖表為SVG需補aria-label（已列待辦）"],
@@ -22862,22 +22734,7 @@ if(ab&&A){
 })();
 
 </script>
-<script>
-/* 載入Excel 說明 */
-(function(){
- const b=document.getElementById("loadHelp"); if(!b) return;
- b.onclick=()=>alert(
-  "【載入 Excel｜要載入哪個檔案？為什麼？】\n\n"+
-  "● 載入哪個：SeniorHousing-EcoMap-1_主工具_v1.0.xlsx\n"+
-  "　（或把其中的『23_地區市場』分頁另存成 CSV 再載入）\n\n"+
-  "● 為什麼要載入：網頁內建的是製作當下的資料快照。當您在 Excel 更新了各行政區的租金、\n"+
-  "　65歲以上占比或集團據點之後，載入即可讓網頁的『地區市場』與『我的專屬頁』改用最新數字，\n"+
-  "　不必等重新產製網頁。\n\n"+
-  "● 會讀哪些欄位：行政區／縣市／65+占比／套房與兩房三房租金上下限／集團據點。\n\n"+
-  "● 安全性：解析完全在您的瀏覽器本機進行，檔案不會上傳、不會離開這台電腦。\n"+
-  "　更新只在本次瀏覽有效；重新整理即回到內建快照。要永久更新，請把 Excel 交給知識管理員重產工具。");
-})();
-</script>
+
 <script>
 /* 推動地圖依角色調整措辭 */
 (function(){
@@ -23279,60 +23136,40 @@ if(chip){
   dd.querySelector(".rddall").onclick=()=>{dd.classList.remove("on"); if(window.exitToPortal) window.exitToPortal(); else location.reload();};
 }
 
-/* ---------- 2. 載入狀態標示 ＋ 本機快照 ---------- */
+/* ---------- 2. 資料版本標示 ---------- */
+/* 第四輪：「從 Excel 載入資料」整套機制已退役（見 scripts/retire_excel_snapshot.py）。
+   現在網站是主要工具，資料流向是 Excel →（更新.bat）→ ecomap_data.json → 網頁與
+   Excel 交付檔一起重產，兩者同源。因此沒有「本機覆蓋」這個狀態，
+   這個晶片只做一件事：說清楚你看的是哪一版資料。 */
 function badge(){
   let b=document.getElementById("srcBadge");
   if(!b){ b=document.createElement("span"); b.id="srcBadge"; b.className="srcbadge";
     const tools=document.querySelector(".hdrtools"); tools.insertBefore(b,tools.firstChild);
     b.onclick=()=>showSrc(); }
-  const local=LS.get("dataSnapshot",null);
-  if(local){ b.className="srcbadge on"; b.innerHTML=`✅ 已載入主工具資料　<i>${local.when}</i>`; }
-  else { b.className="srcbadge"; b.innerHTML=`📄 內建快照　<i>${(ECO.meta.date||"2026-08-26")}</i>`; }
+  b.className="srcbadge";
+  b.innerHTML=`📄 資料版本　<i>${(ECO.meta.date||"")}</i>`;
 }
 function showSrc(){
-  const local=LS.get("dataSnapshot",null), S=ECO.data_source;
+  const S=ECO.data_source;
   let m=document.getElementById("srcModal");
   if(!m){ m=document.createElement("div"); m.id="srcModal"; m.className="cmodal"; document.body.appendChild(m);
     m.onclick=e=>{if(e.target===m||e.target.classList.contains("cx"))m.classList.remove("on");}; }
   m.innerHTML=`<div class="cbox"><button class="cx">✕</button>
-    <h3>資料來源與快照機制</h3>
-    <div class="srcnow ${local?"on":""}">
-      <b>目前使用：${local?"已載入的主工具資料":"內建快照"}</b>
-      <span>${local?`載入時間 ${local.when}　·　更新 ${local.n} 個行政區　·　已存在本機瀏覽器，下次開啟自動套用`
-                    :`製作於 ${ECO.meta.date}　·　由顧問彙整官方統計與業界行情建立`}</span>
-      ${local?`<button class="btnprimary sm ghost" id="clearSnap">清除本機資料，回到內建快照</button>`:""}
+    <h3>資料來源與版本</h3>
+    <div class="srcnow on">
+      <b>目前資料版本：${ECO.meta.date||""}</b>
+      <span>${S.builtin}</span>
     </div>
-    <p style="font-size:.85rem;margin:12px 0 6px">${S.builtin}</p>
-    <h4 style="margin:12px 0 6px;color:var(--navy)">資料分級</h4>
+    <h4 style="margin:14px 0 6px;color:var(--navy)">資料分級</h4>
     <div class="scrollx"><table class="tbl"><thead><tr><th>等級</th><th>內容</th><th>使用限制</th></tr></thead>
     <tbody>${S.layers.map(l=>`<tr><td><b>${l[0]}</b></td><td>${l[1]}</td><td>${l[2]}</td></tr>`).join("")}</tbody></table></div>
-    <h4 style="margin:14px 0 6px;color:var(--navy)">快照怎麼運作</h4>
-    <div class="scrollx"><table class="tbl"><thead><tr><th>情況</th><th>行為</th></tr></thead>
-    <tbody>${S.snapshot.map(l=>`<tr><td><b>${l[0]}</b></td><td>${l[1]}</td></tr>`).join("")}</tbody></table></div>
+    <h4 style="margin:14px 0 6px;color:var(--navy)">資料怎麼更新</h4>
+    <div class="scrollx"><table class="tbl"><thead><tr><th>問題</th><th>說明</th></tr></thead>
+    <tbody>${(S.snapshot||[]).map(l=>`<tr><td><b>${l[0]}</b></td><td>${l[1]}</td></tr>`).join("")}</tbody></table></div>
     </div>`;
   m.classList.add("on");
-  const c=document.getElementById("clearSnap");
-  if(c) c.onclick=()=>{LS.del("dataSnapshot");alert("已清除本機資料，重新整理後回到內建快照。");location.reload();};
 }
 badge();
-/* 套用本機快照 */
-(function(){
-  const snap=LS.get("dataSnapshot",null);
-  if(snap&&snap.regions){
-    snap.regions.forEach(x=>{const g=ECO.regions.find(y=>y.district===x.district); if(g) Object.assign(g,x);});
-    if(typeof renderRegions==="function") setTimeout(renderRegions,50);
-  }
-})();
-/* 攔截載入完成 → 詢問是否記住 */
-window.afterExcelLoad=function(n){
-  badge();
-  const _c=window.__compLoaded?`\n✅ 同時載入『27_法規合規總表』${window.__compLoaded} 條合規狀態。`:"";
-  if(confirm(`✅ 已載入主工具資料，更新 ${n} 個行政區。${_c}\n\n要「記住」這次載入的資料嗎？\n\n· 按「確定」：存在這台電腦的瀏覽器，下次開啟自動套用\n· 按「取消」：僅本次瀏覽有效，重新整理回到內建快照`)){
-    LS.set("dataSnapshot",{when:new Date().toLocaleString("zh-TW"),n:n,
-      regions:ECO.regions.map(g=>({district:g.district,city:g.city,senior:g.senior,studio:g.studio,r2:g.r2,r3:g.r3,hub:g.hub}))});
-    badge();
-  }
-};
 
 /* ---------- 3. 全台市場模組 ---------- */
 const tb=document.getElementById("twBody");
