@@ -22157,9 +22157,8 @@ function renderPortal(){
 }
 /* ---------- 情境入口（外部角色） ---------- */
 function pick(rid){
-  const r=R(rid);
-  if(r.intake && !profile[rid]) return renderIntake(rid);
-  enter(rid);
+  // 關口已移進 enter()（見上方 ROLE-ENTRY-GUARD）。這裡保留別名，不動既有呼叫點。
+  return enter(rid);
 }
 function renderIntake(rid){
   const r=R(rid), ik=r.intake;
@@ -22346,8 +22345,15 @@ window.setPhaseMonth=function(m){setMonth(m);};
 function setMonth(m){month=m;LS.set("month",m);renderBar();const s=document.getElementById("side");if(s&&s.innerHTML)renderSide(s.dataset.all==="1");}
 window.enterRole=function(rid){enter(rid);};
 function enter(rid){
-  role=rid;LS.set("role",rid);
   const r=R(rid);
+  /*ROLE-ENTRY-GUARD*/
+  // 外部角色的情境入口是必經之路：後面的「我的專屬頁」與各項試算都吃這裡的答案。
+  // 這道檢查原本只寫在 pick() 裡，但 enter() 有五個呼叫點（門戶卡片、繼續上次、
+  // 下拉切換、推動地圖卡片、#hash 深連結），其中三個沒經過 pick()，於是同一個
+  // 身分從不同入口進去看到的內容不一樣。關口放在 enter() 這個唯一收口，
+  // 日後新增入口也不會再漏。
+  if(r&&r.intake&&!profile[rid]) return renderIntake(rid);
+  role=rid;LS.set("role",rid);
   document.getElementById("portal").style.display="none";
   document.getElementById("workspace").classList.add("on");
   const chip=document.getElementById("roleChip");
@@ -23127,11 +23133,12 @@ if(chip){
   document.addEventListener("click",e=>{if(!e.target.closest("#roleDD"))dd.classList.remove("on");});
   dd.querySelectorAll(".rddi").forEach(b=>b.onclick=()=>{
     dd.classList.remove("on");
-    const rid=b.dataset.r, r=ROLES.find(x=>x.id===rid);
-    const pf=LS.get("profile",{});
-    LS.set("role",rid);
-    if(r.intake&&!pf[rid]) location.reload();   // 外部角色未填條件 → 重載進情境入口
-    else { if(window.enterRole) window.enterRole(rid); else location.reload(); }
+    const rid=b.dataset.r;
+    // 原本這裡自己判斷「未填條件就 location.reload()」，註解說是「重載進情境入口」，
+    // 但 v1.1 起載入邏輯改為「一律停在門戶總覽」，重載只會回到門戶、問題沒被問。
+    // 現在一律交給 enterRole → enter()，由那道關口決定要不要先問。
+    if(window.enterRole) window.enterRole(rid);
+    else { LS.set("role",rid); location.reload(); }
   });
   dd.querySelector(".rddall").onclick=()=>{dd.classList.remove("on"); if(window.exitToPortal) window.exitToPortal(); else location.reload();};
 }
