@@ -1,6 +1,6 @@
 # 高齡住宅服務事業 — 公開簡介 v1.0
 
-瑞光健康科技股份有限公司｜資料版本 2026-08-28
+瑞光健康科技股份有限公司｜資料版本 2026-08-31
 
 網站：<https://nchsieh.github.io/senior-housing-as-a-service/>
 
